@@ -1,17 +1,18 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dumpster-ing
   annotations:
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - http:
-        paths:
-        - path: /some-path
-          backend:
-            serviceName: my-service
-            servicePort: 8080
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/v1"
+        backend:
+          service:
+            name: svc-v1
+            port:
+              number: 8080
